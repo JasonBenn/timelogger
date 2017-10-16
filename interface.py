@@ -795,7 +795,7 @@ def main():
   frequent_goals = get_most_frequent_goals(relevant_incomplete_goals, NUM_TO_SHOW, one_week_in_seconds)
   optimal_goals = get_optimal_goals(relevant_incomplete_goals, NUM_TO_SHOW)
   #display 3 columns (60 chars each), one for each of the categories
-  fancy_tri_column_print(optimal_goals, frequent_goals, recent_goals, 60, 4)
+  fancy_tri_column_print(optimal_goals, frequent_goals, recent_goals, 35, 4)
   #read command and handle
   user_data = prompt("Enter command:")
   if len(user_data) > 0 and user_data[0] == '/':
