@@ -9,6 +9,7 @@ import time
 import glob
 import datetime
 
+TIMELOGGER_DIR = "/Users/jasonbenn/code/timelogger"
 INPUT_SEPARATOR = ","
 DAYLIGHT_SAVINGS_ADJUSTMENT = 60*60
 NOW = decimal.Decimal(str(time.time())) + DAYLIGHT_SAVINGS_ADJUSTMENT
@@ -122,7 +123,7 @@ def parse_time_from_user(user_data, last_recorded_time):
 
 def load_all_goals():
   goals = {}
-  for file_name in glob.glob("goals/*.json"):
+  for file_name in glob.glob(TIMELOGGER_DIR + "/goals/*.json"):
     file_name = file_name.replace("\\", "/")
     goal = Goal.load_from_file(file_name)
     goals[goal.id] = goal
