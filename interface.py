@@ -181,6 +181,9 @@ class Goal:
     self.progress = []
     self.requires = []
 
+  def __repr__(self):
+    return "<Goal {}: {} [{}]>".format(self.id, self.description, ", ".join(self.tags))
+
   @staticmethod
   def file_name_from_id(file_id):
     return "goals/"+str(file_id)+".json"
@@ -334,7 +337,7 @@ def create_goal(user_data, tags):
   goal = Goal()
   goal.load_from_user(tags)
   goal.save()
-  
+
 def add_time(user_data, goal_dict, prev_entry):
   user_data = user_data.strip()
   is_complete = False
@@ -637,6 +640,9 @@ class Entry():
     self.duration = self.end_time - self.start_time
     self.goal = goal
 
+  def __repr__(self):
+    return "<Entry: {} [{}]>".format(self.notes, self.goal)
+
   @property
   def description(self):
     return self.goal.description
@@ -830,7 +836,7 @@ def main():
   display_record(recent_entries[-10:])
   #finally, prompt for any input so that the window doesnt close instantly
   input()
-    
+
 if __name__ == "__main__":
   main()
-  
+
