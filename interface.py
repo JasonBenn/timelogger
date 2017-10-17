@@ -11,8 +11,7 @@ import datetime
 
 TIMELOGGER_DIR = "/Users/jasonbenn/code/timelogger"
 INPUT_SEPARATOR = ","
-DAYLIGHT_SAVINGS_ADJUSTMENT = 60*60
-NOW = decimal.Decimal(str(time.time())) + DAYLIGHT_SAVINGS_ADJUSTMENT
+NOW = decimal.Decimal(str(time.time()))
 
 one_day_in_seconds = decimal.Decimal(24*60*60)
 one_week_in_seconds = 14*one_day_in_seconds
