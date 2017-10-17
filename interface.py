@@ -616,8 +616,7 @@ def get_most_frequent_goals(goals, limit, time_limit):
   return relevant_goals[:limit]
 
 def get_optimal_goals(goals, limit):
-  goals.sort(key=lambda goal: goal.value_rate)
-  goals.reverse()
+  goals.sort(key=lambda goal: goal.id)
   return goals[:limit]
 
 def pad(data, maxLen):
