@@ -9,7 +9,7 @@ import time
 import glob
 import datetime
 
-TIMELOGGER_DIR = "/Users/jasonbenn/code/timelogger"
+TIMELOGGER_DIR = "/Users/jasonbenn/code/timelogger/"
 INPUT_SEPARATOR = ","
 NOW = decimal.Decimal(str(time.time()))
 
@@ -122,7 +122,7 @@ def parse_time_from_user(user_data, last_recorded_time):
 
 def load_all_goals():
   goals = {}
-  for file_name in glob.glob(TIMELOGGER_DIR + "/goals/*.json"):
+  for file_name in glob.glob(TIMELOGGER_DIR + "goals/*.json"):
     file_name = file_name.replace("\\", "/")
     goal = Goal.load_from_file(file_name)
     goals[goal.id] = goal
@@ -149,7 +149,7 @@ def parse_goal_from_user(user_data, goals):
     return possible_goals[int(goal_choice.strip())]
 
 class Goal:
-  ID_FILE = "goals/next.id"
+  ID_FILE = TIMELOGGER_DIR + "goals/next.id"
   THOUGHT_SEPARATOR = "*********************************"
 
   @staticmethod
@@ -186,7 +186,7 @@ class Goal:
 
   @staticmethod
   def file_name_from_id(file_id):
-    return "goals/"+str(file_id)+".json"
+    return TIMELOGGER_DIR + "goals/"+str(file_id)+".json"
 
   @staticmethod
   def load_from_file(file_name):
