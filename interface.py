@@ -768,42 +768,17 @@ def handle_command_line_data(command_data):
     recent_entries = get_multi_entries_since(all_recent_goals, NOW - one_day_in_seconds)
     display_record(recent_entries[-10:])
 
-NUM_TO_SHOW = 40
+NUM_TO_SHOW = 15
 
-def main():
-  #this should only happen on windows
-  if os.name == 'nt':
-    os.system("mode con cols=190 lines=60")
-  # big hack to read string from the command line
-  if len(sys.argv) > 0 and sys.argv[1] == '-c':
-    handle_command_line_data(sys.argv[2])
-    return
-  #read tags from args
-  tags = sys.argv[1:]
-  tag_set = set(tags)
-  print(" ".join(tag_set) + "\n=======================================")
-  #load all goals
-  goal_dict = load_all_goals()
-  goals = list(goal_dict.values())
-  #figure out and display the most recent
+def get_prev_entry(goals):
   all_recent_goals = get_most_recent_goals(goals, NUM_TO_SHOW)
   recent_entries = get_multi_entries_since(all_recent_goals, NOW - one_week_in_seconds)
-  display_record(recent_entries[-1*NUM_TO_SHOW:])
   if len(recent_entries) > 0:
-    prev_entry = recent_entries[-1]
-  #use tags to more sensibly display the most recent tasks, most frequent tasks, and highest value tasks
-  if len(tag_set) > 0:
-    relevant_goals = [goal for goal in goals if tag_set.issubset(set(goal.tags))]
-  else:
-    relevant_goals = goals
-  recent_goals = get_most_recent_goals(relevant_goals, NUM_TO_SHOW)
-  relevant_incomplete_goals = [goal for goal in goals if not goal.is_complete]
-  frequent_goals = get_most_frequent_goals(relevant_incomplete_goals, NUM_TO_SHOW, one_week_in_seconds)
-  optimal_goals = get_optimal_goals(relevant_incomplete_goals, NUM_TO_SHOW)
-  #display 3 columns (60 chars each), one for each of the categories
-  fancy_tri_column_print(optimal_goals, frequent_goals, recent_goals, 35, 4)
-  #read command and handle
-  user_data = prompt("Enter command:")
+    return recent_entries[-1]
+
+def dispatch_command(user_data, goals, tags, goal_dict):
+  prev_entry = get_prev_entry(goals)
+
   if len(user_data) > 0 and user_data[0] == '/':
     command = user_data.split(" ")[0]
     user_data = " ".join(user_data.split(" ")[1:])
@@ -829,12 +804,51 @@ def main():
       return
   #handle the default case (add_time)
   add_time(user_data, goal_dict, prev_entry)
+  redisplay_recent_tasks(goals, 1)
+
+def redisplay_recent_tasks(goals, n=10):
   #then redisplay recent tasks, because it's nice to see  :)
   all_recent_goals = get_most_recent_goals(goals, NUM_TO_SHOW)
   recent_entries = get_multi_entries_since(all_recent_goals, NOW - one_day_in_seconds)
-  display_record(recent_entries[-10:])
-  #finally, prompt for any input so that the window doesnt close instantly
-  input()
+  display_record(recent_entries[-n:])
+
+
+def main():
+  #this should only happen on windows
+  if os.name == 'nt':
+    os.system("mode con cols=190 lines=60")
+  # big hack to read string from the command line
+  if len(sys.argv) > 0 and sys.argv[1] == '-c':
+    handle_command_line_data(sys.argv[2])
+    return
+  #read tags from args
+  tags = sys.argv[1:]
+  tag_set = set(tags)
+  print(" ".join(tag_set) + "\n=======================================")
+  #load all goals
+  goal_dict = load_all_goals()
+  goals = list(goal_dict.values())
+
+  #use tags to more sensibly display the most recent tasks, most frequent tasks, and highest value tasks
+  if len(tag_set) > 0:
+    relevant_goals = [goal for goal in goals if tag_set.issubset(set(goal.tags))]
+  else:
+    relevant_goals = goals
+  recent_goals = get_most_recent_goals(relevant_goals, NUM_TO_SHOW)
+  relevant_incomplete_goals = [goal for goal in goals if not goal.is_complete]
+  frequent_goals = get_most_frequent_goals(relevant_incomplete_goals, NUM_TO_SHOW, one_week_in_seconds)
+  optimal_goals = get_optimal_goals(relevant_incomplete_goals, NUM_TO_SHOW)
+
+  redisplay_recent_tasks(goals, 10)
+
+  #display 3 columns (60 chars each), one for each of the categories
+  fancy_tri_column_print(optimal_goals, frequent_goals, recent_goals, 35, 4)
+
+  #read command and handle
+  user_data = prompt("Enter command:")
+  while len(user_data) != 0:
+    dispatch_command(user_data, goals, tags, goal_dict)
+    user_data = prompt("Enter command:")
 
 if __name__ == "__main__":
   main()
