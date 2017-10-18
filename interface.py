@@ -824,7 +824,7 @@ def main():
   #read tags from args
   tags = sys.argv[1:]
   tag_set = set(tags)
-  print(" ".join(tag_set) + "\n=======================================")
+
   #load all goals
   goal_dict = load_all_goals()
   goals = list(goal_dict.values())
@@ -839,10 +839,17 @@ def main():
   frequent_goals = get_most_frequent_goals(relevant_incomplete_goals, NUM_TO_SHOW, one_week_in_seconds)
   optimal_goals = get_optimal_goals(relevant_incomplete_goals, NUM_TO_SHOW)
 
+  # If argv is sumtag, then print a summary and exit.
+  if tags[0] == "sumtag":
+    summarize(goals, "", for_tags=True)
+    sys.exit()
+
+  print(" ".join(tag_set) + "\n=======================================")
   redisplay_recent_tasks(goals, 10)
 
   #display 3 columns (60 chars each), one for each of the categories
   fancy_tri_column_print(optimal_goals, frequent_goals, recent_goals, 35, 4)
+
 
   #read command and handle
   user_data = prompt("Enter command:")
