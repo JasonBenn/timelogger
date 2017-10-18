@@ -564,8 +564,7 @@ def summarize(goals, user_data, for_tags = False):
     pass
   now_date_time = datetime.datetime.fromtimestamp(NOW)
   delta_to_day_start = now_date_time - datetime.datetime(now_date_time.year, now_date_time.month, now_date_time.day, 0, 0, 0)
-  start_extra_pad = 60*60 # pad start time by 1 hour to catch sleep
-  start_time = (NOW - decimal.Decimal(str(delta_to_day_start.total_seconds()))) - (days_ago_start * one_day_in_seconds) - start_extra_pad
+  start_time = (NOW - decimal.Decimal(str(delta_to_day_start.total_seconds()))) - (days_ago_start * one_day_in_seconds)
   end_time = (NOW - decimal.Decimal(str(delta_to_day_start.total_seconds()))) - (days_ago_end * one_day_in_seconds)
   recent_entries = get_entries_in_period(goals, start_time, end_time)
   tagged_entries = get_entries_by_tag(recent_entries, start_time, end_time)
